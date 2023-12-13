@@ -4,7 +4,7 @@ const User=require('../model/userModel');
 
 const authMiddleware=asyncHandler(
     async(req,res,next)=>{
-console.log("Middleware called");
+
         let token;
         if(req.headers.authorization.startsWith('Bearer')){
           
