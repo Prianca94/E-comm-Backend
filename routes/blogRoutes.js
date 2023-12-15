@@ -8,7 +8,7 @@ router.post('/',authMiddleware,isAdmin,createBlog);
 
 router.put('/likes',authMiddleware,likeBlog);
 
-router.post('/dislikes',authMiddleware,disLiketheBlog);
+router.put('/dislikes',authMiddleware,disLiketheBlog);
 router.put('/:id',authMiddleware,isAdmin,updateBlog);
 router.get('/:id',getBlog);
 router.get('/',getBlogList);
