@@ -5,6 +5,10 @@ const dotenv=require('dotenv').config();
 const PORT =process.env.PORT || 4000;
 const authRouter=require('./routes/authRoutes');
 const productRouter=require('./routes/productRoute');
+const blogRouter=require('./routes/blogRoutes');
+const categoryRoute=require('./routes/prodCategoryRoute');
+const blogCategoryRoute=require('./routes/blogCategoryRoute');
+const brandRoute=require('./routes/brandRoute');
 const bodyParser = require('body-parser');
 const { notFound } = require('./middleware/errorHandler');
 const {errorHandler} = require('./middleware/errorHandler');
@@ -21,6 +25,10 @@ app.use(cookieParser());
 
 app.use('/api/user',authRouter);
 app.use('/api/Product',productRouter);
+app.use('/api/blog',blogRouter);
+app.use('/api/category',categoryRoute);
+app.use('/api/blogCategory',blogCategoryRoute);
+app.use('/api/brand',brandRoute);
 
 app.use(notFound);
 app.use(errorHandler);
