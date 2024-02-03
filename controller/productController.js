@@ -3,6 +3,9 @@ const asyncHandler = require("express-async-handler");
 const slugify = require("slugify");
 const validateMongoDbId = require("../utils/validateMongodb");
 const User = require("../model/userModel");
+const cloudinaryUploadImage=require("../utils/cloudinary");
+const fs = require('node:fs');
+const path=require('path');
 
 const createProduct = asyncHandler(async (req, res) => {
   try {
@@ -26,6 +29,7 @@ const getProduct = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
 
 const getProductList = asyncHandler(async (req, res) => {
   try {
@@ -80,15 +84,15 @@ const getProductList = asyncHandler(async (req, res) => {
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
-  const { id } = req.params.id;
-  //validateMongoDbId(id);
+  const { id } = req.params;
+  validateMongoDbId(id);
 
   try {
     if (req.body.title) {
       req.body.slug = slugify(req.body.title);
     }
 
-    const updatedProduct = await Product.findOneAndUpdate(id, req.body, { new: true });
+    const updatedProduct = await Product.findByIdAndUpdate(id, req.body, { new: true });
 
     res.json(updatedProduct);
   } catch (error) {
@@ -174,4 +178,43 @@ const rating = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { createProduct, getProduct, getProductList, updateProduct, deleteProduct, addToWishlist, rating };
+
+const uploadImages=asyncHandler(async(req,res,next)=>{
+  
+  const {id}=req.params;
+  validateMongoDbId(id);
+  try{
+const uploader=((path)=>cloudinaryUploadImage(path,"images"));
+
+  const urls=[];
+  const files=req.files;
+  for(const file of files){
+    const {path}=file;
+    const {filename}=file;
+  
+    const newpath =await uploader(path);
+    
+    urls.push(newpath);
+
+   // const npath="D:/E-com-Node-Api/public/images/"+filename;
+    console.log(path);
+   //fs.unlink("D:/E-com-Node-Api/public/images/"+filename,(err) => {console.log(err)});  
+  
+ //fs.unlink('D:/E-com-Node-Api/public/images/images-1703011918374.jpeg',(err)=>{console.log(err)});
+  //fs.unlinkSync(path,(err)=>{console.log(err)});
+     
+}
+
+  const findProduct =await  Product.findByIdAndUpdate(id,
+    {images:urls.map((file)=>{return file})}
+    ,{new:true})
+
+  res.json(findProduct);
+
+  }catch(error){
+throw new Error(error);
+  }
+  
+  });
+  
+module.exports = { createProduct, getProduct, getProductList, updateProduct, deleteProduct,uploadImages, addToWishlist, rating };

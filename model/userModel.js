@@ -33,7 +33,6 @@ var userSchema = new mongoose.Schema({
     required: true,
   },
  
-
   isBlocked:{
     type:Boolean,
     default:false
@@ -50,7 +49,7 @@ var userSchema = new mongoose.Schema({
     type:String
   },
 
-  address:[{type :mongoose.Schema.Types.ObjectId , ref:"Address"}],
+  address:{type:String},
   wishlist:[{type:mongoose.Schema.Types.ObjectId ,ref:"Product"}],
   refreshToken:{
     type:String
